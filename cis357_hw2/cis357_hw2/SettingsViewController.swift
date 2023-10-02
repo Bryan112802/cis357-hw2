@@ -103,6 +103,14 @@ class SettingsViewController: UIViewController{
         self.navigationController?.dismiss(animated: true)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+           super.viewWillDisappear(animated)
+
+           if let d = self.delegate {
+               d.settingsChanged(distanceUnits: distanceUnits, bearingUnits: bearingUnits)
+           }
+       }
+    
     
     
     @objc func tapOutside(_ sender: UITapGestureRecognizer) {
@@ -122,6 +130,7 @@ class SettingsViewController: UIViewController{
                 self.pickerData = ["Kilometers", "Miles"]
                 let selected = picker.selectedRow(inComponent: 0)
                 distanceText.text = pickerData[selected]
+                distanceUnits = pickerData[selected]
                 picker.selectRow(selectedDistanceRow, inComponent: 0, animated: true)
                 saveDistanceText = pickerData[selected]
             }
@@ -129,6 +138,7 @@ class SettingsViewController: UIViewController{
                 self.pickerData = ["Degrees", "Mils"]
                 let selected = picker.selectedRow(inComponent: 0)
                 bearingText.text = pickerData[selected]
+                bearingUnits = pickerData[selected]
                 picker.selectRow(selectedBearingRow, inComponent: 0, animated: true)
                 saveBearingText = pickerData[selected]
             }
@@ -148,17 +158,7 @@ class SettingsViewController: UIViewController{
     
     //SAVE DOES NOT WORK, WHEN YOU OPEN IT AFTER SAVING, PREVIOUS VALUE NOT STORED
     @IBAction func saveButton(_ sender: Any) {
-        selectedDistanceUnits = distanceText.text ?? ""
-            selectedDistanceUnits = bearingText.text ?? ""
-            
-            // Update the initial values for next time
-            initialDistanceText = selectedDistanceUnits
-            initialBearingText = selectedBearingUnits
-            
-            // Notify the delegate (if needed)
-            delegate?.settingsChanged(distanceUnits: selectedDistanceUnits, bearingUnits: selectedBearingUnits)
-            
-            // Dismiss the SettingsViewController
+        
             self.dismiss(animated: true, completion: nil)
     }
   
@@ -193,12 +193,8 @@ extension SettingsViewController : UIPickerViewDataSource, UIPickerViewDelegate 
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if self.picker.tag == 0 {
             self.distanceUnits = self.pickerData[row]
-        }
-        else if self.picker.tag == 1 {
             self.bearingUnits = self.pickerData[row]
-        }
     }
     
 }

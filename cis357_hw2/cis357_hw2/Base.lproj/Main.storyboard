@@ -87,7 +87,6 @@
                             </button>
                             <connections>
                                 <action selector="saveButton:" destination="YcV-h5-o5E" id="ZEH-2e-MoW"/>
-                                <segue destination="BYZ-38-t0r" kind="presentation" identifier="goToMain" id="qsK-bF-yaK"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -107,7 +106,7 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="cis357_hw2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="802"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4VB-Yw-u3u">
@@ -116,7 +115,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Settings"/>
                                 <connections>
-                                    <segue destination="QBQ-hj-kFV" kind="presentation" id="A6S-hM-792"/>
+                                    <segue destination="QBQ-hj-kFV" kind="presentation" identifier="goToSettings" id="g25-bI-12r"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UcI-Hr-B9r">

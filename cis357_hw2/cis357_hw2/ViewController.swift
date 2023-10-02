@@ -112,16 +112,21 @@ class ViewController: UIViewController, SettingsViewControllerDelegate {
     }
     
     func settingsChanged(distanceUnits: String, bearingUnits: String) {
+        print("")
         self.bearingUnits = bearingUnits
         self.distanceUnits = distanceUnits
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToSettings" {
-            if let dest = segue.destination as? SettingsViewController {
-                dest.delegate = self
-                dest.distanceUnits = self.distanceUnits
-                dest.bearingUnits = self.bearingUnits
+            print("Working")
+            if let dest = segue.destination as? UINavigationController {
+                if let dest = dest.topViewController as? SettingsViewController {
+                    print("working2")
+                        dest.delegate = self
+                        dest.distanceUnits = self.distanceUnits
+                        dest.bearingUnits = self.bearingUnits
+                    }
             }
         }
     }
