@@ -27,16 +27,11 @@ class SettingsViewController: UIViewController{
     var originalDistanceText:String = ""
     var originalBearingText:String = ""
     
-    var saveDistanceText: String = ""
-    var saveBearingText: String = ""
     
     var selectedDistanceRow = 0
     var selectedBearingRow = 0
     
-    var selectedDistanceUnits: String = ""
-    var selectedBearingUnits: String = ""
-    var initialDistanceText: String = ""
-    var initialBearingText: String = ""
+
 
 
     override func viewDidLoad() {
@@ -44,41 +39,11 @@ class SettingsViewController: UIViewController{
 
         picker.dataSource = self
         picker.delegate = self
-        
-        selectedDistanceUnits = distanceText.text ?? ""
-        selectedBearingUnits = bearingText.text ?? ""
-        initialDistanceText = selectedDistanceUnits
-        initialBearingText = selectedBearingUnits
 
-        /*
-        // Do any additional setup after loading the view.
-        if picker.tag == 0 {
-            self.pickerData = ["Kilometers", "Miles"]
-        }
-        else if picker.tag == 1 {
-            self.pickerData = ["Degrees", "Mils"]
-        }
         
-        self.picker.delegate = self
-        self.picker.dataSource = self
-        
-        selectedDistanceRow = picker.selectedRow(inComponent: 0)
-        selectedBearingRow = picker.selectedRow(inComponent: 0)
-        
-        if self.picker.tag == 1 {
-            if let index = pickerData.firstIndex(of: self.bearingUnits){
-                self.picker.selectRow(index, inComponent: 0, animated: true)
-            }
-        }
-        else if self.picker.tag == 0 {
-            if let index = pickerData.firstIndex(of: self.distanceUnits) {
-                self.picker.selectRow(index, inComponent: 0, animated: true)
-            }
-        }
-        else {
-            self.picker.selectRow(0, inComponent: 0, animated: true)
-        }
-        */
+        distanceText.text = distanceUnits
+        bearingText.text = bearingUnits
+
 
         let distanceTapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
         distanceText.isUserInteractionEnabled = true
@@ -97,9 +62,8 @@ class SettingsViewController: UIViewController{
         }
     
     @IBAction func cancelButton(_ sender: Any) {
-        distanceText.text = originalDistanceText
-        bearingText.text = originalBearingText
-
+        distanceUnits = originalDistanceText
+        bearingUnits = originalBearingText
         self.navigationController?.dismiss(animated: true)
     }
     
@@ -122,25 +86,26 @@ class SettingsViewController: UIViewController{
     }
 
     
-    
-    //There is an issue where if you change the distanceText to miles(2nd field in picker), and then click on the bearingText, it auto updates it to the 2nd field in picker.
     @objc func tap(_ text: UITapGestureRecognizer) {
 
             if text.view == distanceText {
+                picker.tag = 0
                 self.pickerData = ["Kilometers", "Miles"]
                 let selected = picker.selectedRow(inComponent: 0)
                 distanceText.text = pickerData[selected]
-                distanceUnits = pickerData[selected]
+                distanceUnits = distanceText.text!
+                print(distanceUnits)
                 picker.selectRow(selectedDistanceRow, inComponent: 0, animated: true)
-                saveDistanceText = pickerData[selected]
             }
             else if text.view == bearingText {
+                picker.tag = 1
                 self.pickerData = ["Degrees", "Mils"]
                 let selected = picker.selectedRow(inComponent: 0)
                 bearingText.text = pickerData[selected]
-                bearingUnits = pickerData[selected]
+                bearingUnits = bearingText.text!
+                print(bearingUnits)
                 picker.selectRow(selectedBearingRow, inComponent: 0, animated: true)
-                saveBearingText = pickerData[selected]
+
             }
         
         
@@ -156,9 +121,8 @@ class SettingsViewController: UIViewController{
         }
     
     
-    //SAVE DOES NOT WORK, WHEN YOU OPEN IT AFTER SAVING, PREVIOUS VALUE NOT STORED
+
     @IBAction func saveButton(_ sender: Any) {
-        
             self.dismiss(animated: true, completion: nil)
     }
   
@@ -193,8 +157,11 @@ extension SettingsViewController : UIPickerViewDataSource, UIPickerViewDelegate 
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            self.distanceUnits = self.pickerData[row]
-            self.bearingUnits = self.pickerData[row]
+        if pickerView.tag == 0 {
+                self.distanceUnits = self.pickerData[row]
+            } else if pickerView.tag == 1 {
+                self.bearingUnits = self.pickerData[row]
+            }
     }
     
 }

@@ -41,62 +41,45 @@ class ViewController: UIViewController, SettingsViewControllerDelegate {
         return (100*result).rounded()/100
     }
     
-    var settingsViewController: SettingsViewController?
-    
     @IBOutlet weak var distanceResult: UILabel!
     @IBOutlet weak var bearingResult: UILabel!
     
     @IBAction func calcButton(_ sender: Any) {
-           latp1Val = Double(latp1.text!)!
-           latp2Val = Double(latp2.text!)!
-           distance = calculateDistance(a: latp1Val, b: latp2Val)
-           distanceResult.text = String(distance) + " \(distanceUnits)"
+        latp1Val = Double(latp1.text!)!
+        latp2Val = Double(latp2.text!)!
+
+        longp1Val = Double(longp1.text!)!
+        longp2Val = Double(longp2.text!)!
+        
+        if distanceUnits == "Kilometers" {
+            distance = calculateDistance(a: latp1Val, b: latp2Val)
+            distanceResult.text = String(distance) + " \(distanceUnits)"
+        }
+        else {
+            distance = (calculateDistance(a: latp1Val, b: latp2Val)) * 0.621371
+            distance = (100*distance).rounded() / 100
+            distanceResult.text = String(distance) + " \(distanceUnits)"
+        }
+        
+        let x = cos(latp2Val) * sin(abs(longp2Val - longp1Val))
+        let y = cos(latp1Val) * sin(latp2Val) - sin(latp1Val) * cos(latp2Val) * cos(abs(longp2Val - longp1Val))
+        
+        if bearingUnits == "Degrees" {
+            bearingTemp = (100*(atan2(x,y) * 180.0 / Double.pi)).rounded() / 100
+            bearingResult.text = String(bearingTemp) + " \(bearingUnits)"
+        }
+        else {
+            bearingTemp = (atan2(x,y) * 180.0 / Double.pi)
+            bearingTemp = bearingTemp * (160/9)
+            bearingTemp  = (100*bearingTemp).rounded() / 100
+            bearingResult.text = String(bearingTemp) + " \(bearingUnits)"
+        }
            
-           longp1Val = Double(longp1.text!)!
-           longp2Val = Double(longp2.text!)!
-           
-           let x = cos(latp2Val) * sin(abs(longp2Val - longp1Val))
-           let y = cos(latp1Val) * sin(latp2Val) - sin(latp1Val) * cos(latp2Val) * cos(abs(longp2Val - longp1Val))
-           bearingTemp = (100*(atan2(x,y) * 180.0 / Double.pi)).rounded() / 100
-           bearingResult.text = String(bearingTemp) + " \(bearingUnits)"
            
            self.view.endEditing(true)
        }
     
     
-    
-    /*@IBAction func calcButton(_ sender: Any) {
-        //DistanceText is not properly getting the value from settingsViewController
-        if let DistanceText = settingsViewController?.distanceText.text{
-            if DistanceText == "Miles" {
-                distanceUnits = "Miles"
-                latp1Val = Double(latp1.text!)!
-                latp2Val = Double(latp2.text!)!
-                distance = (calculateDistance(a: latp1Val, b: latp2Val)) * 0.621371
-                print(distance)
-                distanceResult.text = String(distance ) + " \(distanceUnits)"
-            }
-            else if DistanceText == "Kilometers" {
-                latp1Val = Double(latp1.text!)!
-                latp2Val = Double(latp2.text!)!
-                distance = calculateDistance(a: latp1Val, b: latp2Val)
-                distanceResult.text = String(distance) + " \(distanceUnits)"
-            }
-        }
-            
-        
-        longp1Val = Double(longp1.text!)!
-        longp2Val = Double(longp2.text!)!
-        
-        let x = cos(latp2Val) * sin(abs(longp2Val - longp1Val))
-        let y = cos(latp1Val) * sin(latp2Val) - sin(latp1Val) * cos(latp2Val) * cos(abs(longp2Val - longp1Val))
-        bearingTemp = (100*(atan2(x,y) * 180.0 / Double.pi)).rounded() / 100
-        bearingResult.text = String(bearingTemp) + " \(bearingUnits)"
-        
-        self.view.endEditing(true)
-    }
-     
-     */
     
     
     @IBAction func clearButton(_ sender: Any) {
@@ -112,9 +95,11 @@ class ViewController: UIViewController, SettingsViewControllerDelegate {
     }
     
     func settingsChanged(distanceUnits: String, bearingUnits: String) {
-        print("")
+        print("Settings changed")
         self.bearingUnits = bearingUnits
         self.distanceUnits = distanceUnits
+        print(bearingUnits)
+        print(distanceUnits)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
